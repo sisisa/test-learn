@@ -1,69 +1,67 @@
-# テスト学習プロジェクト
+# テスト学習プロジェクト — Task Manager
 
-Vue.js (Composition API) + TypeScript + Vitest を使って、ソフトウェアテストの基本を実践的に学ぶためのプロジェクトです。
+Vue.js (Composition API) + TypeScript + Vitest で構築したタスク管理アプリです。  
+実務的なテスト設計パターンを実践的に学べるよう設計されています。
 
-## 学習できること
+## 学べるテスト技術
 
-1. **テスト仕様書** の書き方 → `docs/test-specification.md`
-2. **テストケース** の設計方法 → `docs/test-cases.md`
-3. **単体テスト** の実装 → `tests/unit/`
-4. **結合テスト** の実装 → `tests/integration/`
+| テスト技術 | 対象ファイル | 学習ポイント |
+|-----------|-------------|-------------|
+| 純粋関数の単体テスト | `validator`, `formatter`, `taskFilter` | 正常系/異常系/境界値、パラメタライズドテスト |
+| 非同期テスト + モック | `taskApi` | `vi.fn()`、`async/await`、localStorage モック |
+| Composable テスト | `useTaskManager`, `useFormValidation` | 依存注入、リアクティブ検証、computed連動 |
+| コンポーネント結合テスト | `TaskForm`, `TaskList`, `TaskItem` | mount、ユーザー操作シミュレーション、emit検証 |
 
 ## セットアップ
 
 ```bash
-# 依存関係のインストール
 yarn install
-
-# 開発サーバー起動
-yarn dev
+yarn dev      # 開発サーバー起動
 ```
 
 ## テスト実行
 
 ```bash
-# 全テスト実行
-yarn test
-
-# ウォッチモード（ファイル変更時に自動再実行）
-yarn test:watch
-
-# カバレッジレポート付き
-yarn test:coverage
+yarn test             # 全テスト実行（113件）
+yarn test:watch       # ウォッチモード
+yarn test:coverage    # カバレッジレポート付き
 ```
 
 ## プロジェクト構成
 
 ```
 src/
-├── components/
-│   └── Counter.vue          # 結合テスト対象のUIコンポーネント
-├── composables/
-│   └── useCounter.ts        # Composition API のロジック（単体テスト対象）
+├── types/task.ts                  # 型定義
 ├── utils/
-│   └── calculator.ts        # 純粋関数（単体テスト対象）
-├── App.vue
-└── main.ts
+│   ├── validator.ts               # バリデーション（単体テスト対象）
+│   ├── formatter.ts               # フォーマッター（単体テスト対象）
+│   └── taskFilter.ts              # フィルター/ソート（単体テスト対象）
+├── services/taskApi.ts            # API模擬層（モックテスト対象）
+├── composables/
+│   ├── useTaskManager.ts          # タスクCRUD（依存注入テスト対象）
+│   └── useFormValidation.ts       # フォーム制御（リアクティブテスト対象）
+└── components/
+    ├── TaskForm.vue               # 追加フォーム（結合テスト対象）
+    ├── TaskList.vue               # 一覧+フィルター（結合テスト対象）
+    ├── TaskItem.vue               # 個別タスク（結合テスト対象）
+    └── TaskStats.vue              # 統計カード
 
 tests/
-├── unit/
-│   ├── calculator.spec.ts   # calculator.ts の単体テスト
-│   └── useCounter.spec.ts   # useCounter.ts の単体テスト
-└── integration/
-    └── Counter.spec.ts      # Counter.vue の結合テスト
+├── unit/          # 単体テスト（6ファイル）
+└── integration/   # 結合テスト（3ファイル）
 
 docs/
-├── test-specification.md    # テスト仕様書のサンプル
-└── test-cases.md            # テストケース一覧のサンプル
+├── test-specification.md   # テスト仕様書
+└── test-cases.md           # テストケース一覧
 ```
 
 ## 技術スタック
 
-| 技術 | バージョン | 用途 |
-|------|-----------|------|
-| Vue.js | 3.x | UIフレームワーク |
-| TypeScript | 5.x | 型安全なコード |
-| Vite | 6.x | ビルドツール |
-| Vitest | 3.x | テストフレームワーク |
-| @vue/test-utils | 2.x | Vueコンポーネントテスト |
-| happy-dom | 17.x | テスト用DOM環境 |
+| 技術 | 用途 |
+|------|------|
+| Vue.js 3 (Composition API) | UIフレームワーク |
+| TypeScript | 型安全 |
+| Vite | ビルドツール |
+| Vitest | テストフレームワーク |
+| @vue/test-utils | コンポーネントテスト |
+| happy-dom | テスト用DOM環境 |
